@@ -30,6 +30,10 @@ _page.forEach((_array) => {
   });
 });
 
+app.get('/', (req, res) => {
+  res.send('<h2>🏁🏁🏁</h2>')
+})
+
 // console.log(page)
 app.get('/inlineSearch', (req, res) => {
   console.log(req.query.text)
