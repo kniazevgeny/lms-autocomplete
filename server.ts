@@ -1,25 +1,11 @@
 const express = require("express");
 const localtunnel = require("localtunnel");
 const app = express();
+const cors = require("cors");
 import xlsx from "node-xlsx";
 
 // Add headers before the routes are defined
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-
-  // Request methods you wish to allow
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-  // Request headers you wish to allow
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  res.setHeader('Access-Control-Allow-Credentials', true);
-
-  // Pass to next layer of middleware
-  next();
-});
+app.use(cors({ origin: "*" }));
 
 // Parse a file
 const workSheetsFromFile = xlsx.parse(`Unit_11.xlsx`);
@@ -40,9 +26,9 @@ app.get("/", (req, res) => {
 
 // console.log(page)
 app.get("/inlineSearch", (req, res) => {
-  console.log(req.query.text);
   let i = page.search(req.query.text);
-  res.send(
+  console.log(
+    req.query.text,
     page.slice(
       i + req.query.text.length,
       i +
@@ -50,6 +36,14 @@ app.get("/inlineSearch", (req, res) => {
         page.slice(i + req.query.text.length, -1).search(" ")
     )
   );
+  res.send({
+    data: page.slice(
+      i + req.query.text.length,
+      i +
+        req.query.text.length +
+        page.slice(i + req.query.text.length, -1).search(" ")
+    ),
+  });
 });
 
 /*
