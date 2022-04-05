@@ -16,7 +16,8 @@ const _page = workSheetsFromFile[0].data;
 let page = "";
 _page.forEach((_array) => {
   (_array as string[]).forEach((element) => {
-    page += element + " ";
+    // or replace \n by ' '
+    page += element.split("\n").join(" ") + " ";
   });
 });
 

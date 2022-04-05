@@ -12,6 +12,7 @@ on:
 jobs:
   build:
     timeout-minutes: 10080
+    # 7 days
     runs-on: ubuntu-latest
 
     strategy:
