@@ -3,6 +3,24 @@ const localtunnel = require("localtunnel");
 const app = express();
 import xlsx from "node-xlsx";
 
+// Add headers before the routes are defined
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  // Request methods you wish to allow
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+  // Request headers you wish to allow
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader('Access-Control-Allow-Credentials', true);
+
+  // Pass to next layer of middleware
+  next();
+});
+
 // Parse a file
 const workSheetsFromFile = xlsx.parse(`Unit_11.xlsx`);
 // Take data from the first worksheet
