@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-
+    timeout-minutes: 10080
     runs-on: ubuntu-latest
 
     strategy:
