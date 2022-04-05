@@ -26,6 +26,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: ifconfig -a
     - run: npm ci
     - run: tsc server.ts
     - run: node server.js
