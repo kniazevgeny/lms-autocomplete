@@ -67,8 +67,12 @@ app.get("/inlineSearch", (req, res) => {
 app.post("/multipleAnswerSearch", (req, res) => {
   if (isDebug) console.log(req.query.text);
   if (isDebug) console.log(req.body.options);
+  
+  // search for the answer in the particular topic
+  let pageSlice = page.slice(page.indexOf(req.query.topic), )
+
   for (let index = 0; index < req.body.options.length; index++) {
-    if (page.indexOf(req.query.text + req.body.options[index]) > 0) {
+    if (pageSlice.indexOf(req.query.text + req.body.options[index]) > 0) {
       if (isDebug) console.log(req.body.options[index])
       res.send({
         data: index,
