@@ -4,6 +4,7 @@ const localtunnel = require("localtunnel");
 const app = express();
 const cors = require("cors");
 import xlsx from "node-xlsx";
+import { consoleTestResultHandler } from "tslint/lib/test";
 
 const isDebug = false;
 
@@ -13,77 +14,31 @@ app.use(cors({ origin: "*" }));
 app.use(bodyParser.json());
 
 // Parse a file
-const workSheetsFromFile = xlsx.parse(`Unit_11.xlsx`);
+const workSheetsFromFile = xlsx.parse(`economics.xlsx`);
 // Take data from the first worksheet
-const _page = workSheetsFromFile[0].data;
+const page = workSheetsFromFile[0].data as String[][];
+// console.log(page)
 
-// Create a string from all the elements
-let page = "";
-_page.forEach((_array) => {
-  (_array as string[]).forEach((element) => {
-    // or replace \n and \r by ' '
-    page += element.replace(/(\r\n|\n|\r)/gm, " ").trim() + " ";
-    // if (isDebug) if (element.includes("глава (книги)")) console.log(page.slice(page.length - element.length, ));
-  });
-});
 
 app.get("/", (req, res) => {
-  res.send("<h2>🏁🏁🏁</h2>");
-});
-
-app.get("/inlineSearch", (req, res) => {
-  let i = page.indexOf(req.query.text.trim());
-  console.log(
-    req.query.text,
-    page.slice(
-      i + req.query.text.length,
-      i +
-        req.query.text.length +
-        page.slice(i + req.query.text.length, -1).indexOf(" ")
-    )
-  );
-  if (isDebug) {
-    console.log(
-      i,
-      req.query.text.length,
-      page.slice(
-        i + req.query.text.length,
-        i +
-          req.query.text.length +
-          page.slice(i + req.query.text.length, -1).indexOf(" ")
-      )
-    );
+  if (isDebug) console.log(Object.keys(req.query).includes('q'))
+  if (Object.keys(req.query).includes('q')){
+    if (isDebug) console.log(req.query.q)
+    page.forEach((pair) => {
+      if (pair[0].includes(req.query.q)) {
+        if (isDebug) {
+          console.log(pair[1])
+        }
+        res.send(`<h5 style='font-family: monospace'>${pair[1]}</h5>`);
+        return;
+      }
+    })
   }
-  res.send({
-    data: page.slice(
-      i + req.query.text.length,
-      i +
-        req.query.text.length +
-        page.slice(i + req.query.text.length, -1).indexOf(" ")
-    ),
-  });
-});
-
-app.post("/multipleAnswerSearch", (req, res) => {
-  if (isDebug) console.log(req.query.text);
-  if (isDebug) console.log(req.body.options);
-  
-  // search for the answer in the particular topic
-  let pageSlice = page.slice(page.indexOf(req.query.topic), )
-
-  for (let index = 0; index < req.body.options.length; index++) {
-    if (pageSlice.indexOf(req.query.text + req.body.options[index]) > 0) {
-      if (isDebug) console.log(req.body.options[index])
-      res.send({
-        data: index,
-      });
-      return;
-    }
+  else {
+    res.send("<h3 style='font-family: monospace'>🏁🏁🏁Use kniazevgeny.loca.lt/?q={Your question here}🏁🏁🏁</h3>");
   }
-  res.send({
-    data: -1,
-  });
 });
+
 
 if (!isDebug) {
   /*
@@ -92,7 +47,7 @@ if (!isDebug) {
   var tunnel = localtunnel(
     3000,
     {
-      subdomain: "kniazevgeny-1",
+      subdomain: "kniazevgeny",
     },
     function (err, tunnel) {
       if (err) {
