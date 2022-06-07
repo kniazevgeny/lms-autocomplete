@@ -33,6 +33,7 @@ app.get("/", (req, res) => {
         return;
       }
     })
+    res.send(`<h5 style='font-family: monospace'>404: not found :/</h5>`);
   }
   else {
     res.send("<h3 style='font-family: monospace'>🏁🏁🏁Use kniazevgeny.loca.lt/?q={Your question here}🏁🏁🏁</h3>");
