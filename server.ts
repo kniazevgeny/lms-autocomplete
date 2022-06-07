@@ -23,17 +23,22 @@ const page = workSheetsFromFile[0].data as String[][];
 app.get("/", (req, res) => {
   if (isDebug) console.log(Object.keys(req.query).includes('q'))
   if (Object.keys(req.query).includes('q')){
-    if (isDebug) console.log(req.query.q)
-    page.forEach((pair) => {
-      if (pair[0].includes(req.query.q)) {
-        if (isDebug) {
-          console.log(pair[1])
+    try {
+      if (isDebug) console.log(req.query.q)
+      page.forEach((pair) => {
+        if (pair[0].includes(req.query.q)) {
+          if (isDebug) {
+            console.log(pair[1])
+          }
+          res.send(`<h5 style='font-family: monospace'>${pair[1]}</h5>`);
+          return;
         }
-        res.send(`<h5 style='font-family: monospace'>${pair[1]}</h5>`);
-        return;
-      }
-    })
-    res.send(`<h5 style='font-family: monospace'>404: not found :/</h5>`);
+      })
+      res.send(`<h5 style='font-family: monospace'>404: not found :/</h5>`);
+    }
+    catch (err) {
+      res.send(`<h5 style='font-family: monospace'>500: internal error :/</h5>`);
+    }
   }
   else {
     res.send("<h3 style='font-family: monospace'>🏁🏁🏁Use kniazevgeny.loca.lt/?q={Your question here}🏁🏁🏁</h3>");
